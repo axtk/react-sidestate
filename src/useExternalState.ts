@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { EventPayloadMap, isState, State } from "sidestate";
-import { RenderCallback } from "./types/RenderCallback.ts";
+import { type EventPayloadMap, isState, type State } from "sidestate";
+import type { RenderCallback } from "./types/RenderCallback.ts";
 
-export type SetPortableStateValue<T, P extends EventPayloadMap<T>> =
-  State<T, P>["setValue"];
+export type SetPortableStateValue<T, P extends EventPayloadMap<T>> = State<
+  T,
+  P
+>["setValue"];
 
 const defaultRenderCallback = (render: () => void) => render();
 
@@ -12,13 +14,21 @@ export function useExternalState<T, P extends EventPayloadMap<T>>(
   callback?: RenderCallback<P["update"]> | boolean,
 ): [T, SetPortableStateValue<T, P>];
 
-export function useExternalState<T, P extends EventPayloadMap<T>, E extends keyof P>(
+export function useExternalState<
+  T,
+  P extends EventPayloadMap<T>,
+  E extends keyof P,
+>(
   state: State<T, P>,
   callback?: RenderCallback<P[E]> | boolean,
   event?: E,
 ): [T, SetPortableStateValue<T, P>];
 
-export function useExternalState<T, P extends EventPayloadMap<T>, E extends string>(
+export function useExternalState<
+  T,
+  P extends EventPayloadMap<T>,
+  E extends string,
+>(
   state: State<T, P>,
   callback: RenderCallback<P[E]> | boolean = defaultRenderCallback,
   event?: E,
@@ -45,9 +55,8 @@ export function useExternalState<T, P extends EventPayloadMap<T>, E extends stri
       if (shouldUpdate.current) setRevision(Math.random());
     };
 
-    let resolvedCallback = typeof callback === "function"
-      ? callback
-      : defaultRenderCallback;
+    let resolvedCallback =
+      typeof callback === "function" ? callback : defaultRenderCallback;
 
     let unsubscribe = state.on(event ?? "update", (payload) => {
       resolvedCallback(render, payload as P[E]);

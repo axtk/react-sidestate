@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { NavigationOptions } from "sidestate";
+import type { NavigationOptions } from "sidestate";
+import type { RenderCallback } from "./types/RenderCallback.ts";
 import { URLContext } from "./URLContext.ts";
 import { useExternalState } from "./useExternalState.ts";
-import { RenderCallback } from "./types/RenderCallback.ts";
 
 export function useURL(callback?: RenderCallback<NavigationOptions>) {
   return useExternalState(useContext(URLContext), callback, "navigation");

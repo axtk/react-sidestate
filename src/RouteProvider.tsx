@@ -24,5 +24,7 @@ export const RouteProvider = ({ href, children }: RouteProviderProps) => {
     return () => route.stop();
   }, [route]);
 
-  return <RouteContext.Provider value={route}>{children}</RouteContext.Provider>;
+  return (
+    <RouteContext.Provider value={route}>{children}</RouteContext.Provider>
+  );
 };
