@@ -1,0 +1,29 @@
+{
+  "name": "react-sidestate",
+  "version": "0.1.0",
+  "description": "",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "preversion": "npm run shape",
+    "shape": "npx codeshape",
+    "typecheck": "npx codeshape --typecheck-only"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axtk/react-sidestate.git"
+  },
+  "license": "MIT",
+  "author": "axtk",
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14"
+  },
+  "dependencies": {
+    "sidestate": "^0.1.4"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "include": ["./index.ts", "./src"],
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "lib": ["ESNext", "DOM"],
+    "target": "esnext",
+    "outDir": "dist",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}
