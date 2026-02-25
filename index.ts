@@ -1,3 +1,4 @@
+export * from "sidestate";
 export * from "./src/RouteContext.ts";
 export * from "./src/RouteProvider.ts";
 export * from "./src/URLContext.ts";

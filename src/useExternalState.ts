@@ -7,9 +7,20 @@ export type SetPortableStateValue<T, P extends EventPayloadMap<T>> =
 
 const defaultRenderCallback = (render: () => void) => render();
 
+export function useExternalState<T, P extends EventPayloadMap<T>>(
+  state: State<T, P>,
+  callback?: RenderCallback<P["update"]> | boolean,
+): [T, SetPortableStateValue<T, P>];
+
+export function useExternalState<T, P extends EventPayloadMap<T>, E extends keyof P>(
+  state: State<T, P>,
+  callback?: RenderCallback<P[E]> | boolean,
+  event?: E,
+): [T, SetPortableStateValue<T, P>];
+
 export function useExternalState<T, P extends EventPayloadMap<T>, E extends string>(
   state: State<T, P>,
-  callback: RenderCallback<P[E]> = defaultRenderCallback,
+  callback: RenderCallback<P[E]> | boolean = defaultRenderCallback,
   event?: E,
 ): [T, SetPortableStateValue<T, P>] {
   if (!isState<T, P>(state))
@@ -25,6 +36,8 @@ export function useExternalState<T, P extends EventPayloadMap<T>, E extends stri
     // Allow state instances to hook into the effect
     state.emit("effect");
 
+    if (callback === false) return;
+
     shouldUpdate.current = true;
 
     let render = () => {
@@ -32,8 +45,12 @@ export function useExternalState<T, P extends EventPayloadMap<T>, E extends stri
       if (shouldUpdate.current) setRevision(Math.random());
     };
 
+    let resolvedCallback = typeof callback === "function"
+      ? callback
+      : defaultRenderCallback;
+
     let unsubscribe = state.on(event ?? "update", (payload) => {
-      callback(render, payload as P[E]);
+      resolvedCallback(render, payload as P[E]);
     });
 
     if (state.revision !== initialStateRevision.current)
