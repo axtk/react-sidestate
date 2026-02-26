@@ -1,4 +1,4 @@
-export type TrackableActionState = {
+export type TransientState = {
   initial?: boolean | undefined;
   pending?: boolean | undefined;
   error?: unknown;

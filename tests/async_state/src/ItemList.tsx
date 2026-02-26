@@ -1,10 +1,10 @@
 import { type CSSProperties, useCallback, useEffect, useState } from "react";
-import { useTrackableAction } from "../../../index.ts";
+import { useTransientState } from "../../../index.ts";
 import { fetchItems as fetchItemsOriginal, type Item } from "./fetchItems.ts";
 
 export let ItemList = () => {
   let [items, setItems] = useState<Item[]>([]);
-  let { call: fetchItems, initial, pending, error } = useTrackableAction(fetchItemsOriginal, "fetch-items");
+  let { call: fetchItems, initial, pending, error } = useTransientState(fetchItemsOriginal, "fetch-items");
 
   let loadItems = useCallback(() => {
     fetchItems().then(setItems);

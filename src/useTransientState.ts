@@ -1,14 +1,14 @@
 import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { isState, State } from "sidestate";
-import { TrackableActionState } from "./types/TrackableActionState.ts";
-import { TrackableActionStateContext } from "./TrackableActionStateContext.ts";
+import { TransientState } from "./types/TransientState.ts";
+import { TransientStateContext } from "./TransientStateContext.ts";
 import { SetExternalStateValue, useExternalState } from "./useExternalState.ts";
 
 function createState(
   initial = true,
   pending = false,
   error?: unknown,
-): TrackableActionState {
+): TransientState {
   return {
     initial,
     pending,
@@ -17,7 +17,7 @@ function createState(
   };
 }
 
-export type ActionTrackingOptions = {
+export type TransientStateOptions = {
   /**
    * Whether to track the action state silently (e.g. with a background
    * action or an optimistic update).
@@ -47,34 +47,34 @@ export type ActionTrackingOptions = {
  * state across multiple components. If omitted, the pending state stays
  * locally scoped to the component where the hook is used.
  */
-export function useTrackableAction<F extends (...args: unknown[]) => unknown>(
+export function useTransientState<F extends (...args: unknown[]) => unknown>(
   action: F,
-  state?: string | State<TrackableActionState> | null,
-): TrackableActionState & {
-  call: (...args: [...Parameters<F>, ActionTrackingOptions?]) => ReturnType<F>,
-  update: SetExternalStateValue<TrackableActionState>,
+  state?: string | State<TransientState> | null,
+): TransientState & {
+  call: (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>,
+  update: SetExternalStateValue<TransientState>,
 };
 
-export function useTrackableAction(
-  state?: string | State<TrackableActionState> | null,
-): TrackableActionState & {
-  update: SetExternalStateValue<TrackableActionState>,
+export function useTransientState(
+  state?: string | State<TransientState> | null,
+): TransientState & {
+  update: SetExternalStateValue<TransientState>,
 };
 
-export function useTrackableAction<F extends (...args: unknown[]) => unknown>(
-  action?: F | string | State<TrackableActionState> | null,
-  state?: string | State<TrackableActionState> | null,
-): TrackableActionState & {
-  call?: (...args: [...Parameters<F>, ActionTrackingOptions?]) => ReturnType<F>,
-  update: SetExternalStateValue<TrackableActionState>,
+export function useTransientState<F extends (...args: unknown[]) => unknown>(
+  action?: F | string | State<TransientState> | null,
+  state?: string | State<TransientState> | null,
+): TransientState & {
+  call?: (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>,
+  update: SetExternalStateValue<TransientState>,
 } {
-  let stateMap = useContext(TrackableActionStateContext);
-  let stateRef = useRef<State<TrackableActionState> | null>(null);
+  let stateMap = useContext(TransientStateContext);
+  let stateRef = useRef<State<TransientState> | null>(null);
   let [stateItemInited, setStateItemInited] = useState(false);
 
   let [resolvedAction, resolvedState] = useMemo(() => {
     let resolvedAction: F | undefined;
-    let stateInit: string | State<TrackableActionState> | null | undefined;
+    let stateInit: string | State<TransientState> | null | undefined;
 
     if (action === undefined || typeof action === "function") {
       resolvedAction = action;
@@ -85,7 +85,7 @@ export function useTrackableAction<F extends (...args: unknown[]) => unknown>(
       stateInit = action;
     }
 
-    if (isState<TrackableActionState>(stateInit))
+    if (isState<TransientState>(stateInit))
       return [resolvedAction, stateInit];
 
     if (typeof stateInit === "string") {
@@ -108,11 +108,11 @@ export function useTrackableAction<F extends (...args: unknown[]) => unknown>(
 
   let [actionState, setActionState] = useExternalState(resolvedState);
 
-  let trackableAction = useCallback((...args: [...Parameters<F>, ActionTrackingOptions?]) => {
+  let trackableAction = useCallback((...args: [...Parameters<F>, TransientStateOptions?]) => {
     if (!resolvedAction)
       throw new Error("A trackable action is only available when the 'action' parameter is set");
 
-    let options = args.at(-1) as ActionTrackingOptions | undefined;
+    let options = args.at(-1) as TransientStateOptions | undefined;
     let originalArgs = args.slice(0, -1) as Parameters<F>;
     let result: unknown;
 
