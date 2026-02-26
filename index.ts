@@ -15,6 +15,8 @@ export * from "./src/URLContext.ts";
 export * from "./src/URLProvider.tsx";
 export * from "./src/useExternalState.ts";
 export * from "./src/useLinkClick.ts";
+export * from "./src/useNavigationComplete.ts";
+export * from "./src/useNavigationStart.ts";
 export * from "./src/useRoute.ts";
 export * from "./src/useRouteState.ts";
 export * from "./src/useTransientState.ts";
