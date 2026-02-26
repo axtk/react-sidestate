@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import type { NavigationOptions } from "sidestate";
 import { RouteContext } from "./RouteContext.ts";
 import type { RenderCallback } from "./types/RenderCallback.ts";
@@ -9,5 +9,8 @@ export function useRoute(callback?: RenderCallback<NavigationOptions>) {
 
   useExternalState(route, callback, "navigation");
 
-  return route;
+  return useMemo(() => ({
+    route,
+    at: route.at.bind(route),
+  }), [route]);
 }
