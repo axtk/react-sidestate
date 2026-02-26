@@ -31,6 +31,6 @@
     "react-dom": "^19.2.4"
   },
   "dependencies": {
-    "sidestate": "^0.1.4"
+    "sidestate": "^0.1.5"
   }
 }

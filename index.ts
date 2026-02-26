@@ -13,4 +13,5 @@ export * from "./src/URLProvider.tsx";
 export * from "./src/useExternalState.ts";
 export * from "./src/useLinkClick.ts";
 export * from "./src/useRoute.ts";
+export * from "./src/useRouteState.ts";
 export * from "./src/useURL.ts";
