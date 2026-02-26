@@ -52,5 +52,5 @@ export function useRouteState<T extends LocationValue>(
     [url, route, options, getState],
   );
 
-  return [getState(url), setState];
+  return [getState(), setState];
 }
