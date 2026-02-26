@@ -42,12 +42,6 @@ export type ActionTrackingOptions = {
 };
 
 /**
- * Returns `[trackableAction, state, setState]`, where `trackableAction` is a
- * version of the given `action` whose progression state can be tracked,
- * `state: { initial, pending, error }` is the current action state value, and
- * `setState(nextState | ((state) => nextState))` is a function allowing to
- * directly update the action state.
- *
  * The hook's optional `state` parameter is a unique string key or an instance
  * of `State`. Providing a key or a shared state allows to share the action
  * state across multiple components. If omitted, the pending state stays
@@ -56,45 +50,74 @@ export type ActionTrackingOptions = {
 export function useTrackableAction<F extends (...args: unknown[]) => unknown>(
   action: F,
   state?: string | State<TrackableActionState> | null,
-): [
-  (...args: [...Parameters<F>, ActionTrackingOptions]) => ReturnType<F>,
-  TrackableActionState,
-  SetExternalStateValue<TrackableActionState>,
-] {
+): TrackableActionState & {
+  call: (...args: [...Parameters<F>, ActionTrackingOptions?]) => ReturnType<F>,
+  update: SetExternalStateValue<TrackableActionState>,
+};
+
+export function useTrackableAction(
+  state?: string | State<TrackableActionState> | null,
+): TrackableActionState & {
+  update: SetExternalStateValue<TrackableActionState>,
+};
+
+export function useTrackableAction<F extends (...args: unknown[]) => unknown>(
+  action?: F | string | State<TrackableActionState> | null,
+  state?: string | State<TrackableActionState> | null,
+): TrackableActionState & {
+  call?: (...args: [...Parameters<F>, ActionTrackingOptions?]) => ReturnType<F>,
+  update: SetExternalStateValue<TrackableActionState>,
+} {
   let stateMap = useContext(TrackableActionStateContext);
   let stateRef = useRef<State<TrackableActionState> | null>(null);
   let [stateItemInited, setStateItemInited] = useState(false);
 
-  let resolvedState = useMemo(() => {
-    if (isState<TrackableActionState>(state)) return state;
+  let [resolvedAction, resolvedState] = useMemo(() => {
+    let resolvedAction: F | undefined;
+    let stateInit: string | State<TrackableActionState> | null | undefined;
 
-    if (typeof state === "string") {
-      let stateItem = stateMap.get(state);
+    if (action === undefined || typeof action === "function") {
+      resolvedAction = action;
+      stateInit = state;
+    }
+    else {
+      resolvedAction = undefined;
+      stateInit = action;
+    }
+
+    if (isState<TrackableActionState>(stateInit))
+      return [resolvedAction, stateInit];
+
+    if (typeof stateInit === "string") {
+      let stateItem = stateMap.get(stateInit);
 
       if (!stateItem) {
         stateItem = new State(createState());
-        stateMap.set(state, stateItem);
+        stateMap.set(stateInit, stateItem);
 
         if (!stateItemInited) setStateItemInited(true);
       }
 
-      return stateItem;
+      return [resolvedAction, stateItem];
     }
 
     if (!stateRef.current) stateRef.current = new State(createState());
 
-    return stateRef.current;
-  }, [state, stateMap, stateItemInited]);
+    return [resolvedAction, stateRef.current];
+  }, [action, state, stateMap, stateItemInited]);
 
   let [actionState, setActionState] = useExternalState(resolvedState);
 
-  let trackableAction = useCallback((...args: [...Parameters<F>, ActionTrackingOptions]) => {
+  let trackableAction = useCallback((...args: [...Parameters<F>, ActionTrackingOptions?]) => {
+    if (!resolvedAction)
+      throw new Error("A trackable action is only available when the 'action' parameter is set");
+
     let options = args.at(-1) as ActionTrackingOptions | undefined;
     let originalArgs = args.slice(0, -1) as Parameters<F>;
     let result: unknown;
 
     try {
-      result = action(...originalArgs);
+      result = resolvedAction(...originalArgs);
     }
     catch (error) {
       setActionState((prevState) => ({
@@ -158,9 +181,14 @@ export function useTrackableAction<F extends (...args: unknown[]) => unknown>(
     return result as ReturnType<F>;
   }, [setActionState]);
 
-  return [
-    trackableAction,
-    actionState,
-    setActionState,
-  ];
+  return useMemo(() => {
+    if (!resolvedAction)
+      return { ...actionState, update: setActionState };
+
+    return {
+      ...actionState,
+      call: trackableAction,
+      update: setActionState,
+    };
+  }, [resolvedAction, trackableAction, actionState, setActionState]);
 }
