@@ -110,7 +110,7 @@ export function useTransientState<F extends (...args: unknown[]) => unknown>(
 
   let trackableAction = useCallback((...args: [...Parameters<F>, TransientStateOptions?]) => {
     if (!resolvedAction)
-      throw new Error("A trackable action is only available when the 'action' parameter is set");
+      throw new Error("A trackable action is only available when the hook's 'action' parameter is set");
 
     let options = args.at(-1) as TransientStateOptions | undefined;
     let originalArgs = args.slice(0, -1) as Parameters<F>;
@@ -179,7 +179,7 @@ export function useTransientState<F extends (...args: unknown[]) => unknown>(
     }));
 
     return result as ReturnType<F>;
-  }, [setActionState]);
+  }, [resolvedAction, setActionState]);
 
   return useMemo(() => {
     if (!resolvedAction)
