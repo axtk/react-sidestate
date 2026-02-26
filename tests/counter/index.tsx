@@ -1,12 +1,11 @@
 import { createRoot } from "react-dom/client";
-import { State } from "sidestate";
-import { useExternalState } from "../../src/useExternalState.ts";
+import { State, useExternalState } from "../../index.ts";
 import "./index.css";
 
-let counterStore = new State(0);
+let counterState = new State(0);
 
 let Counter = () => {
-  let [counter, setCounter] = useExternalState(counterStore);
+  let [counter, setCounter] = useExternalState(counterState);
 
   let handleClick = () => {
     setCounter((value) => value + 1);
@@ -16,7 +15,7 @@ let Counter = () => {
 };
 
 let ResetButton = () => {
-  let [, setCounter] = useExternalState(counterStore, false);
+  let [, setCounter] = useExternalState(counterState, false);
 
   let handleClick = () => {
     setCounter(0);
