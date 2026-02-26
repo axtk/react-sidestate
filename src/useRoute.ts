@@ -9,8 +9,11 @@ export function useRoute(callback?: RenderCallback<NavigationOptions>) {
 
   useExternalState(route, callback, "navigation");
 
-  return useMemo(() => ({
-    route,
-    at: route.at.bind(route),
-  }), [route]);
+  return useMemo(
+    () => ({
+      route,
+      at: route.at.bind(route),
+    }),
+    [route],
+  );
 }

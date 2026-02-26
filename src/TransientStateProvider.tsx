@@ -1,7 +1,7 @@
 import { type ReactNode, useMemo, useRef } from "react";
 import { State } from "sidestate";
-import { TransientState } from "./types/TransientState.ts";
 import { TransientStateContext } from "./TransientStateContext.ts";
+import type { TransientState } from "./types/TransientState.ts";
 
 export type TransientStateProviderProps = {
   value?:

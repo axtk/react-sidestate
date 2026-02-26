@@ -1,8 +1,11 @@
 import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { isState, State } from "sidestate";
-import { TransientState } from "./types/TransientState.ts";
 import { TransientStateContext } from "./TransientStateContext.ts";
-import { SetExternalStateValue, useExternalState } from "./useExternalState.ts";
+import type { TransientState } from "./types/TransientState.ts";
+import {
+  type SetExternalStateValue,
+  useExternalState,
+} from "./useExternalState.ts";
 
 function createState(
   initial = true,
@@ -51,22 +54,22 @@ export function useTransientState<F extends (...args: unknown[]) => unknown>(
   action: F,
   state?: string | State<TransientState> | null,
 ): TransientState & {
-  call: (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>,
-  update: SetExternalStateValue<TransientState>,
+  call: (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>;
+  update: SetExternalStateValue<TransientState>;
 };
 
 export function useTransientState(
   state?: string | State<TransientState> | null,
 ): TransientState & {
-  update: SetExternalStateValue<TransientState>,
+  update: SetExternalStateValue<TransientState>;
 };
 
 export function useTransientState<F extends (...args: unknown[]) => unknown>(
   action?: F | string | State<TransientState> | null,
   state?: string | State<TransientState> | null,
 ): TransientState & {
-  call?: (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>,
-  update: SetExternalStateValue<TransientState>,
+  call?: (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>;
+  update: SetExternalStateValue<TransientState>;
 } {
   let stateMap = useContext(TransientStateContext);
   let stateRef = useRef<State<TransientState> | null>(null);
@@ -79,14 +82,12 @@ export function useTransientState<F extends (...args: unknown[]) => unknown>(
     if (action === undefined || typeof action === "function") {
       resolvedAction = action;
       stateInit = state;
-    }
-    else {
+    } else {
       resolvedAction = undefined;
       stateInit = action;
     }
 
-    if (isState<TransientState>(stateInit))
-      return [resolvedAction, stateInit];
+    if (isState<TransientState>(stateInit)) return [resolvedAction, stateInit];
 
     if (typeof stateInit === "string") {
       let stateItem = stateMap.get(stateInit);
@@ -108,82 +109,85 @@ export function useTransientState<F extends (...args: unknown[]) => unknown>(
 
   let [actionState, setActionState] = useExternalState(resolvedState);
 
-  let trackableAction = useCallback((...args: [...Parameters<F>, TransientStateOptions?]) => {
-    if (!resolvedAction)
-      throw new Error("A trackable action is only available when the hook's 'action' parameter is set");
+  let trackableAction = useCallback(
+    (...args: [...Parameters<F>, TransientStateOptions?]) => {
+      if (!resolvedAction)
+        throw new Error(
+          "A trackable action is only available when the hook's 'action' parameter is set",
+        );
 
-    let options = args.at(-1) as TransientStateOptions | undefined;
-    let originalArgs = args.slice(0, -1) as Parameters<F>;
-    let result: unknown;
+      let options = args.at(-1) as TransientStateOptions | undefined;
+      let originalArgs = args.slice(0, -1) as Parameters<F>;
+      let result: unknown;
 
-    try {
-      result = resolvedAction(...originalArgs);
-    }
-    catch (error) {
-      setActionState((prevState) => ({
-        ...prevState,
-        ...createState(false, false, error),
-      }));
+      try {
+        result = resolvedAction(...originalArgs);
+      } catch (error) {
+        setActionState((prevState) => ({
+          ...prevState,
+          ...createState(false, false, error),
+        }));
 
-      if (options?.throws) throw error;
-    }
+        if (options?.throws) throw error;
+      }
 
-    if (result instanceof Promise) {
-      let delayedTracking: ReturnType<typeof setTimeout> | null = null;
+      if (result instanceof Promise) {
+        let delayedTracking: ReturnType<typeof setTimeout> | null = null;
 
-      if (!options?.silent) {
-        let delay = options?.delay;
+        if (!options?.silent) {
+          let delay = options?.delay;
 
-        if (delay === undefined)
-          setActionState((prevState) => ({
-            ...prevState,
-            ...createState(false, true),
-          }));
-        else
-          delayedTracking = setTimeout(() => {
+          if (delay === undefined)
             setActionState((prevState) => ({
               ...prevState,
               ...createState(false, true),
             }));
+          else
+            delayedTracking = setTimeout(() => {
+              setActionState((prevState) => ({
+                ...prevState,
+                ...createState(false, true),
+              }));
 
-            delayedTracking = null;
-          }, delay);
+              delayedTracking = null;
+            }, delay);
+        }
+
+        return result
+          .then((value) => {
+            if (delayedTracking !== null) clearTimeout(delayedTracking);
+
+            setActionState((prevState) => ({
+              ...prevState,
+              ...createState(false, false),
+            }));
+
+            return value;
+          })
+          .catch((error) => {
+            if (delayedTracking !== null) clearTimeout(delayedTracking);
+
+            setActionState((prevState) => ({
+              ...prevState,
+              ...createState(false, false, error),
+            }));
+
+            if (options?.throws) throw error;
+          }) as ReturnType<F>;
       }
 
-      return result
-        .then((value) => {
-          if (delayedTracking !== null) clearTimeout(delayedTracking);
+      setActionState((prevState) => ({
+        ...prevState,
+        ...createState(false, false),
+      }));
 
-          setActionState((prevState) => ({
-            ...prevState,
-            ...createState(false, false),
-          }));
-
-          return value;
-        })
-        .catch((error) => {
-          if (delayedTracking !== null) clearTimeout(delayedTracking);
-
-          setActionState((prevState) => ({
-            ...prevState,
-            ...createState(false, false, error),
-          }));
-
-          if (options?.throws) throw error;
-        }) as ReturnType<F>;
-    }
-
-    setActionState((prevState) => ({
-      ...prevState,
-      ...createState(false, false),
-    }));
-
-    return result as ReturnType<F>;
-  }, [resolvedAction, setActionState]);
+      return result as ReturnType<F>;
+    },
+    [resolvedAction, setActionState],
+  );
 
   return useMemo(() => {
-    if (!resolvedAction)
-      return { ...actionState, update: setActionState };
+    if (!resolvedAction) return { ...actionState, update: setActionState };
 
     return {
       ...actionState,

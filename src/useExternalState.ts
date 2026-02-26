@@ -2,10 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { type EventPayloadMap, isState, type State } from "sidestate";
 import type { RenderCallback } from "./types/RenderCallback.ts";
 
-export type SetExternalStateValue<T, P extends EventPayloadMap<T> = EventPayloadMap<T>> = State<
+export type SetExternalStateValue<
   T,
-  P
->["setValue"];
+  P extends EventPayloadMap<T> = EventPayloadMap<T>,
+> = State<T, P>["setValue"];
 
 const defaultRenderCallback = (render: () => void) => render();
 

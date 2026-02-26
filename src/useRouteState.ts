@@ -33,7 +33,7 @@ export function useRouteState<T extends LocationValue>(
       let resolvedHref = String(href ?? route.href);
 
       return matchURL<T>(
-        url === undefined ? resolvedHref as T : url,
+        url === undefined ? (resolvedHref as T) : url,
         resolvedHref,
       );
     },

@@ -1,4 +1,4 @@
-import { NavigationOptions } from "sidestate";
+import type { NavigationOptions } from "sidestate";
 
 export type LinkNavigationProps = {
   "data-spa"?: NavigationOptions["spa"];

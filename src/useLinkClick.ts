@@ -4,9 +4,9 @@ import {
   useContext,
 } from "react";
 import { getNavigationOptions, isRouteEvent } from "sidestate";
-import { RouteContext } from "./RouteContext.ts"
-import { AProps } from "./types/AProps.ts";
-import { AreaProps } from "./types/AreaProps.ts";
+import { RouteContext } from "./RouteContext.ts";
+import type { AProps } from "./types/AProps.ts";
+import type { AreaProps } from "./types/AreaProps.ts";
 
 export function useLinkClick({ target, onClick }: AProps | AreaProps) {
   let route = useContext(RouteContext);
