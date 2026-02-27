@@ -35,6 +35,6 @@
     "zod": "^4.3.6"
   },
   "dependencies": {
-    "sidestate": "^0.1.9"
+    "sidestate": "^0.1.10"
   }
 }
