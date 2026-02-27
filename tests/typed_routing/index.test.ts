@@ -31,7 +31,7 @@ test.describe("typed routing", () => {
 
   test.beforeAll(async () => {
     server = await serve({
-      path: "tests/typed_routing",
+      path: import.meta.url,
       bundle: "src/index.tsx",
       spa: true,
     });

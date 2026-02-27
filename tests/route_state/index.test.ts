@@ -42,7 +42,7 @@ test.describe("route state", () => {
 
   test.beforeAll(async () => {
     server = await serve({
-      path: "tests/route_state",
+      path: import.meta.url,
       bundle: "src/index.tsx",
       spa: true,
     });

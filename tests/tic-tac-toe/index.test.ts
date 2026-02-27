@@ -49,7 +49,7 @@ test.describe("tic-tac-toe", () => {
 
   test.beforeAll(async () => {
     server = await serve({
-      path: "tests/tic-tac-toe",
+      path: import.meta.url,
       bundle: "src/index.tsx",
       spa: true,
     });

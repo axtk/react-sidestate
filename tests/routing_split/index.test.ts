@@ -31,7 +31,7 @@ test.describe("routing split", () => {
 
   test.beforeAll(async () => {
     server = await serve({
-      path: "tests/routing_split",
+      path: import.meta.url,
       bundle: "src/index.tsx",
       spa: true,
     });

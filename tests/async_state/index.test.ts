@@ -28,7 +28,7 @@ let server: Server;
 
 test.beforeAll(async () => {
   server = await serve({
-    path: "tests/async_state",
+    path: import.meta.url,
     bundle: "src/index.tsx",
     spa: true,
   });

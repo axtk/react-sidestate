@@ -22,7 +22,7 @@ test.describe("view transitions", () => {
 
   test.beforeAll(async () => {
     server = await serve({
-      path: "tests/view_transitions",
+      path: import.meta.url,
       bundle: "src/index.tsx",
       spa: true,
     });

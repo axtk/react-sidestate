@@ -31,7 +31,7 @@ let server: Server;
 
 test.beforeAll(async () => {
   server = await serve({
-    path: "tests/lazy_routes",
+    path: import.meta.url,
     bundle: "src/index.tsx",
     spa: true,
   });

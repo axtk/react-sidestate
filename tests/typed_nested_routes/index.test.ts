@@ -30,7 +30,7 @@ test.describe("typed nested routes", () => {
 
   test.beforeAll(async () => {
     server = await serve({
-      path: "tests/typed_nested_routes",
+      path: import.meta.url,
       bundle: "src/index.tsx",
       spa: true,
     });
