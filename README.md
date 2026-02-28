@@ -2,7 +2,7 @@
 
 Shared state management and routing in React apps. Under the hood, routing is shared state management, too, with the shared data being the URL.
 
-Contents: [useExternalState](#useexternalstate) · [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [useTransientState](#usetransientstate)
+Contents: [useExternalState](#useexternalstate) · [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [useTransientState](#usetransientstate) · [Annotated examples](#annotated-examples)
 
 ## useExternalState
 
@@ -356,3 +356,25 @@ let initialState = {
 ```
 
 ⬥ With an explicit value or without, the `<TransientStateProvider>`'s nested components will only respond to updates in the particular action state they subscribed to by means of `useTransientState()`.
+
+## Annotated examples
+
+Shared state
+
+- [Shared state without Context](https://codesandbox.io/p/sandbox/gxkn85?file=%252Fsrc%252FApp.tsx), counter app, useExternalState
+- [Shared state with Context](https://codesandbox.io/p/sandbox/9mpfsf?file=%252Fsrc%252FApp.tsx), counter app, useExternalState + React Context
+- [Shared state with Immer](https://codesandbox.io/p/sandbox/gv4rgw?file=%252Fsrc%252FApp.tsx), counter app, useExternalState + Immer
+
+Routing
+
+- [URL-based rendering](https://codesandbox.io/p/sandbox/2nv8ck?file=%252Fsrc%252FApp.tsx), useRoute + link component
+- [Type-safe URL-based rendering](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx), useRoute + url-shape + zod
+- [URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx), useRouteState
+- [Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx), useRouteState + url-shape + zod
+- [Type-safe nested routes](https://codesandbox.io/p/sandbox/pv9rgh?file=%252Fsrc%252FApp.tsx), useRoute, url-shape, zod
+- [Lazy routes](https://codesandbox.io/p/sandbox/qw5r6g?file=%252Fsrc%252FApp.tsx), useRoute, React Suspense, React.lazy
+- [View transitions](https://codesandbox.io/p/sandbox/w4q95n?file=%252Fsrc%252FApp.tsx), useRoute, View Transition API
+
+Async action state
+
+- [Async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx), useTransientState
