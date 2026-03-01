@@ -176,7 +176,7 @@ route.navigate({ href: "/intro", history: "replace", scroll: "off" });
 <A href="/intro" data-spa="off">Intro</A>
 ```
 
-Using valid HTML link attributes (including the `data-` attributes) as SPA link component props makes them easily interchangeable: `<a ...>` ↔ `<A ...>`.
+Using HTML link attributes (including the `data-` attributes) as SPA link component props makes link components easily interchangeable with HTML links and understandable without prior knowledge.
 
 ⬥ Use the optional `callback` parameter of `useRoute(callback?)` for more fine-grained control over the component rendering in response to URL changes. This callback receives the `render` function as a parameter that should be called at some point. Use cases for this render callback include, for example, activating animated view transitions or (less likely in regular circumstances) skipping re-renders for certain URL changes.
 
@@ -220,7 +220,7 @@ let App = () => {
 
 ## useRouteState
 
-Use this hook to manage URL parameters as state in a `useState`-like manner. Use the React's state mental model and/or migrate from local state without major code rewrites:
+Use this hook to manage URL parameters as state in a `useState`-like manner. Use the React's state mental model and migrate from local state without major code rewrites:
 
 ```diff
 + import { useRouteState } from "react-sidestate";
@@ -251,7 +251,7 @@ Use this hook to manage URL parameters as state in a `useState`-like manner. Use
   };
 ```
 
-⬥ `useRouteState(url, options?)` has an optional second parameter in the shape of the `route.navigate()`'s options. For example, pass `{ scroll: "off" }` as `options` to opt out from the default scroll-to-the-top behavior when the URL changes.
+⬥ `useRouteState(url, options?)` has an optional second parameter in the shape of the `route.navigate()`'s options. Pass `{ scroll: "off" }` as `options` to opt out from the default scroll-to-the-top behavior when the URL changes.
 
 ## useTransientState
 
@@ -306,8 +306,8 @@ Use a string key with `useTransientState()` as shown in the example above to acc
 Set `{ silent: true }` as the last parameter of the trackable action returned from the `useTransientState()` hook to prevent the `pending` property from switching to `true` in the pending state.
 
 ```js
-let { call: fetchItems, pending } = useTransientState(fetchItemsOriginal);
-                     // ^ remains `false` in the silent mode
+let { pending, call: fetchItems } = useTransientState(fetchItemsOriginal);
+   // ^ remains `false` in the silent mode
 
 fetchItems({ silent: true })
 ```
@@ -317,8 +317,8 @@ fetchItems({ silent: true })
 Use case: Avoid flashing a process indicator when the action is likely to complete in a short while by delaying the pending state.
 
 ```js
-let { call: fetchItems, pending } = useTransientState(fetchItemsOriginal);
-                     // ^ remains `false` during the delay
+let { pending, call: fetchItems,  } = useTransientState(fetchItemsOriginal);
+   // ^ remains `false` during the delay
 
 fetchItems({ delay: 500 }) // in milliseconds
 ```
@@ -377,4 +377,4 @@ Routing
 
 Async action state
 
-- [Async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx), useTransientState
+- [Shared async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx), useTransientState
