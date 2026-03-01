@@ -2,7 +2,7 @@
 
 Shared state management and routing in React apps. Under the hood, routing is shared state management, too, with the shared data being the URL.
 
-Contents: [useExternalState](#useexternalstate) · [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [useTransientState](#usetransientstate) · [Annotated examples](#annotated-examples)
+Contents: [useExternalState](#useexternalstate) · [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [useTransientState](#usetransientstate) · [Annotated examples](#annotated-examples) · [Internals](#internals)
 
 ## useExternalState
 
@@ -379,3 +379,7 @@ Routing
 Async action state
 
 - [Shared async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx), useTransientState
+
+## Internals
+
+[`sidestate`](https://www.npmjs.com/package/sidestate)
