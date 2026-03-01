@@ -132,6 +132,8 @@ let App = () => {
 
 ⬥ `params` in dynamic values (as in `({ params }) => <Section id={params.id}/>` above) contains the URL pattern's capturing groups.
 
+⬥ By default, `useRoute` and the other routing hooks described here make use of the browser's URL, if it's available. Otherwise, use `<RouteProvider href="/x">` to set a specific URL value. Common use cases: SSR and tests. A less common use case: custom routing behavior, including custom non-URL-based routing ([example](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)).
+
 ### SPA navigation
 
 The SPA navigation API is largely aligned with the similar built-in APIs:
