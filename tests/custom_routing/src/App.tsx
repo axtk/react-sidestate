@@ -28,23 +28,15 @@ const Content = () => {
   );
 };
 
-export const App = () => {
-  let { at } = useRoute();
-
-  return (
-    <>
+export const App = () => (
+  <>
+    <Content />
+    <hr/>
+    <Browser autoFocus>
       <Content />
-      {at(
-        "/",
-        <>
-          <Browser autoFocus>
-            <Content />
-          </Browser>
-          <Browser initialLocation="/sections/1">
-            <Content />
-          </Browser>
-        </>,
-      )}
-    </>
-  );
-};
+    </Browser>
+    <Browser initialLocation="/sections/1">
+      <Content />
+    </Browser>
+  </>
+);
