@@ -372,6 +372,7 @@ Routing
 - [Type-safe nested routes](https://codesandbox.io/p/sandbox/pv9rgh?file=%252Fsrc%252FApp.tsx), useRoute, url-shape, zod
 - [Lazy routes](https://codesandbox.io/p/sandbox/qw5r6g?file=%252Fsrc%252FApp.tsx), useRoute, React Suspense, React.lazy
 - [View transitions](https://codesandbox.io/p/sandbox/w4q95n?file=%252Fsrc%252FApp.tsx), useRoute, View Transition API
+- [Custom routing based on text input](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx), Route, RouteProvider, useRoute
 
 Async action state
 
