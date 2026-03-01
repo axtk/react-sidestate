@@ -31,7 +31,7 @@ const Content = () => {
 export const App = () => (
   <>
     <Content />
-    <hr/>
+    <hr />
     <Browser autoFocus>
       <Content />
     </Browser>

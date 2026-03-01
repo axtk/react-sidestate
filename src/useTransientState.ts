@@ -58,14 +58,22 @@ export type ControllableTransientState = TransientState & {
 export function useTransientState<F extends (...args: unknown[]) => unknown>(
   state: string | State<TransientState> | null,
   action: F,
-): [ControllableTransientState, ((...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>)];
+): [
+  ControllableTransientState,
+  (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>,
+];
 
-export function useTransientState(state: string | State<TransientState> | null): [ControllableTransientState];
+export function useTransientState(
+  state: string | State<TransientState> | null,
+): [ControllableTransientState];
 
 export function useTransientState<F extends (...args: unknown[]) => unknown>(
   state: string | State<TransientState> | null,
   action?: F,
-): [ControllableTransientState, ((...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>)?] {
+): [
+  ControllableTransientState,
+  ((...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>)?,
+] {
   let stateMap = useContext(TransientStateContext);
   let stateRef = useRef<State<TransientState> | null>(null);
   let [stateItemInited, setStateItemInited] = useState(false);
@@ -173,9 +181,11 @@ export function useTransientState<F extends (...args: unknown[]) => unknown>(
   return useMemo(() => {
     let extendedActionState = {
       ...actionState,
-      update: setActionState
+      update: setActionState,
     };
 
-    return action ? [extendedActionState, trackableAction] : [extendedActionState];
+    return action
+      ? [extendedActionState, trackableAction]
+      : [extendedActionState];
   }, [action, trackableAction, actionState, setActionState]);
 }
