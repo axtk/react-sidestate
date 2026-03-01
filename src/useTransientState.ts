@@ -44,74 +44,58 @@ export type TransientStateOptions = {
   throws?: boolean;
 };
 
+export type ControllableTransientState = TransientState & {
+  update: SetExternalStateValue<TransientState>;
+};
+
 /**
- * The hook's optional `state` parameter is a unique string key or an instance
- * of `State`. Providing a key or a shared state allows to share the action
- * state across multiple components. If omitted, the pending state stays
- * locally scoped to the component where the hook is used.
+ * The hook's `state` parameter is a unique string key or an instance of
+ * `State`. Providing a string key or a `State` instance allows to share the
+ * action state across multiple components. If the key is omitted or set to
+ * `null`, the action state stays locally scoped to the component where the
+ * hook is used.
  */
 export function useTransientState<F extends (...args: unknown[]) => unknown>(
+  state: string | State<TransientState> | null,
   action: F,
-  state?: string | State<TransientState> | null,
-): TransientState & {
-  call: (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>;
-  update: SetExternalStateValue<TransientState>;
-};
+): [ControllableTransientState, ((...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>)];
 
-export function useTransientState(
-  state?: string | State<TransientState> | null,
-): TransientState & {
-  update: SetExternalStateValue<TransientState>;
-};
+export function useTransientState(state: string | State<TransientState> | null): [ControllableTransientState];
 
 export function useTransientState<F extends (...args: unknown[]) => unknown>(
-  action?: F | string | State<TransientState> | null,
-  state?: string | State<TransientState> | null,
-): TransientState & {
-  call?: (...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>;
-  update: SetExternalStateValue<TransientState>;
-} {
+  state: string | State<TransientState> | null,
+  action?: F,
+): [ControllableTransientState, ((...args: [...Parameters<F>, TransientStateOptions?]) => ReturnType<F>)?] {
   let stateMap = useContext(TransientStateContext);
   let stateRef = useRef<State<TransientState> | null>(null);
   let [stateItemInited, setStateItemInited] = useState(false);
 
-  let [resolvedAction, resolvedState] = useMemo(() => {
-    let resolvedAction: F | undefined;
-    let stateInit: string | State<TransientState> | null | undefined;
+  let resolvedState = useMemo(() => {
+    if (isState<TransientState>(state)) return state;
 
-    if (action === undefined || typeof action === "function") {
-      resolvedAction = action;
-      stateInit = state;
-    } else {
-      resolvedAction = undefined;
-      stateInit = action;
-    }
-
-    if (isState<TransientState>(stateInit)) return [resolvedAction, stateInit];
-
-    if (typeof stateInit === "string") {
-      let stateItem = stateMap.get(stateInit);
+    if (typeof state === "string") {
+      let stateItem = stateMap.get(state);
 
       if (!stateItem) {
         stateItem = new State(createState());
-        stateMap.set(stateInit, stateItem);
+        stateMap.set(state, stateItem);
 
         if (!stateItemInited) setStateItemInited(true);
       }
 
-      return [resolvedAction, stateItem];
+      return stateItem;
     }
 
     if (!stateRef.current) stateRef.current = new State(createState());
 
-    return [resolvedAction, stateRef.current];
-  }, [action, state, stateMap, stateItemInited]);
+    return stateRef.current;
+  }, [state, stateMap, stateItemInited]);
 
   let [actionState, setActionState] = useExternalState(resolvedState);
 
   let trackableAction = useCallback(
     (...args: [...Parameters<F>, TransientStateOptions?]) => {
-      if (!resolvedAction)
+      if (!action)
         throw new Error(
           "A trackable action is only available when the hook's 'action' parameter is set",
         );
@@ -121,7 +105,7 @@ export function useTransientState<F extends (...args: unknown[]) => unknown>(
       let result: unknown;
 
       try {
-        result = resolvedAction(...originalArgs);
+        result = action(...originalArgs);
       } catch (error) {
         setActionState((prevState) => ({
           ...prevState,
@@ -183,16 +167,15 @@ export function useTransientState<F extends (...args: unknown[]) => unknown>(
 
       return result as ReturnType<F>;
     },
-    [resolvedAction, setActionState],
+    [action, setActionState],
   );
 
   return useMemo(() => {
-    if (!resolvedAction) return { ...actionState, update: setActionState };
-
-    return {
+    let extendedActionState = {
       ...actionState,
-      call: trackableAction,
-      update: setActionState,
+      update: setActionState
     };
-  }, [resolvedAction, trackableAction, actionState, setActionState]);
+
+    return action ? [extendedActionState, trackableAction] : [extendedActionState];
+  }, [action, trackableAction, actionState, setActionState]);
 }

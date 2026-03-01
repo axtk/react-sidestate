@@ -266,18 +266,15 @@ In the example below, storing and rendering the essential app data (`items`) and
 
   export let ItemList = () => {
     let [items, setItems] = useState([]);
-+   let { call: fetchItems, initial, pending, error } = useTransientState(
-+     fetchItemsOriginal,
-+     "fetch-items".
-+   );
++   let [state, fetchItems] = useTransientState("items", fetchItemsOriginal);
 
     useEffect(() => {
       // The fetched items can be stored with any approach to app state
       fetchItems().then(setItems);
     }, [fetchItems]);
 
-+   if (initial || pending) return <p>Loading...</p>;
-+   if (error) return <p>An error occurred</p>;
++   if (state.initial || state.pending) return <p>Loading...</p>;
++   if (state.error) return <p>An error occurred</p>;
 
     return <ul>{items.map(/* ... */)}</ul>;
   };
@@ -286,12 +283,13 @@ In the example below, storing and rendering the essential app data (`items`) and
 ```diff
 + import { useTransientState } from "react-sidestate";
 
-  export let Status = () => {
-+   let { initial, pending, error } = useTransientState("fetch-items");
+- export let Status = ({ state }) => {
++ export let Status = () => {
++   let [state] = useTransientState("items");
 
-    if (initial) return null;
-    if (pending) return <>Busy</>;
-    if (error) return <>Error</>;
+    if (state.initial) return null;
+    if (state.pending) return <>Busy</>;
+    if (state.error) return <>Error</>;
 
     return <>OK</>;
   };
@@ -299,15 +297,15 @@ In the example below, storing and rendering the essential app data (`items`) and
 
 ### Shared and local async action state
 
-Use a string key with `useTransientState()` as shown in the example above to access the same action state from multiple components. Omit the string key to have the action state scoped locally to the component where the hook is used.
+Use a string key with `useTransientState(key, action?)` to access the same action state from multiple components (as in `ItemList` and `Status` above). Pass `null` as a key to have the action state scoped locally to the component where the hook is used.
 
 ### Silent tracking of background actions and optimistic updates
 
-Set `{ silent: true }` as the last parameter of the trackable action returned from the `useTransientState()` hook to prevent the `pending` property from switching to `true` in the pending state.
+Set `{ silent: true }` as the last parameter of the trackable action returned from the `useTransientState` hook to prevent the `pending` property from switching to `true` in the pending state.
 
 ```js
-let { pending, call: fetchItems } = useTransientState(fetchItemsOriginal);
-   // ^ remains `false` in the silent mode
+let [state, fetchItems] = useTransientState(fetchItemsOriginal);
+  // ^ `state.pending` remains `false` in the silent mode
 
 fetchItems({ silent: true })
 ```
@@ -317,15 +315,15 @@ fetchItems({ silent: true })
 Use case: Avoid flashing a process indicator when the action is likely to complete in a short while by delaying the pending state.
 
 ```js
-let { pending, call: fetchItems,  } = useTransientState(fetchItemsOriginal);
-   // ^ remains `false` during the delay
+let [state, fetchItems] = useTransientState(fetchItemsOriginal);
+  // ^ `state.pending` remains `false` during the delay
 
 fetchItems({ delay: 500 }) // in milliseconds
 ```
 
 ### Custom rejection handler
 
-Allow the trackable action to reject explicitly with `{ throws: true }` as the last parameter, along with exposing `error` returned from `useTransientState()` that goes by default.
+Allow the trackable action to reject explicitly with `{ throws: true }` as the last parameter, along with exposing `error` returned from `useTransientState` that goes by default.
 
 ```js
 fetchItems({ throws: true }).catch(handleError)
@@ -355,7 +353,7 @@ let initialState = {
 </TransientStateProvider>
 ```
 
-⬥ With an explicit value or without, the `<TransientStateProvider>`'s nested components will only respond to updates in the particular action state they subscribed to by means of `useTransientState()`.
+⬥ With an explicit value or without, the `<TransientStateProvider>`'s nested components will only respond to updates in the particular action state they subscribed to by means of `useTransientState`.
 
 ## Annotated examples
 

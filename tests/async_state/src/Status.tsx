@@ -1,7 +1,7 @@
 import { useTransientState } from "../../../index.ts";
 
 export let Status = () => {
-  let { initial, pending, error } = useTransientState("fetch-items");
+  let [{ initial, pending, error }] = useTransientState("fetch-items");
 
   // if (initial) return <>⚪ Initial</>;
 

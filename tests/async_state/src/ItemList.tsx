@@ -4,12 +4,7 @@ import { fetchItems as fetchItemsOriginal, type Item } from "./fetchItems.ts";
 
 export let ItemList = () => {
   let [items, setItems] = useState<Item[]>([]);
-  let {
-    call: fetchItems,
-    initial,
-    pending,
-    error,
-  } = useTransientState(fetchItemsOriginal, "fetch-items");
+  let [{ initial, pending, error }, fetchItems] = useTransientState("fetch-items", fetchItemsOriginal);
 
   let loadItems = useCallback(() => {
     fetchItems().then(setItems);
