@@ -132,6 +132,8 @@ let App = () => {
 
 ⬥ `params` in dynamic values (as in `({ params }) => <Section id={params.id}/>` above) contains the URL pattern's capturing groups.
 
+⬥ By default, `params` extracted from a RegExp URL pattern has a shape of `Record<string, string | undefined>`. More specifically typed value parsing of `params` can be achieved in the same routing setup with URL patterns produced by a schema-based URL builder (like with `url-shape` + `zod` or another schema lib, [example](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx)).
+
 ⬥ By default, `useRoute` and the other routing hooks described here make use of the browser's URL, if it's available. Otherwise, use `<RouteProvider href="/x">` to set a specific URL value. Common use cases: SSR and tests. A less common use case: custom routing behavior, including custom non-URL-based routing ([example](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)).
 
 ### SPA navigation
