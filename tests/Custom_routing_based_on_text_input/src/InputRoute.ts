@@ -24,17 +24,13 @@ export class InputRoute extends Route {
       }
     };
 
-    let start = () => {
+    this.on("start", () => {
       window.addEventListener("keydown", handleInput);
-    };
+    });
 
-    let stop = () => {
+    this.on("stop", () => {
       window.removeEventListener("keydown", handleInput);
-    };
-
-    this.on("start", start);
-    this.on("stop", stop);
-    start();
+    });
   }
   _getElement() {
     return document.querySelector<HTMLInputElement>(`#${this.inputId}`);
