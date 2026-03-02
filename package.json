@@ -7,11 +7,11 @@
   "types": "./dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "demo": "npx auxsrv tests/counter --spa -b index.tsx --watch",
+    "demo": "npx auxsrv tests/Shared_state_without_Context --spa -b index.tsx --watch",
     "preversion": "npx npm-run-all shape test",
     "shape": "npx codeshape",
     "test": "npx playwright test --project=chromium",
-    "t3": "npx auxsrv tests/tic-tac-toe --spa -b src/index.tsx --watch",
+    "t3": "npx auxsrv tests/Tic-tac-toe --spa -b src/index.tsx --watch",
     "typecheck": "npx codeshape --typecheck-only"
   },
   "repository": {
