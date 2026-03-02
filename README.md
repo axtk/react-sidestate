@@ -374,6 +374,7 @@ Routing
 - [URL parameters as state](https://codesandbox.io/p/sandbox/6rp4sy?file=%252Fsrc%252FApp.tsx), useRouteState
 - [Type-safe URL parameters as state](https://codesandbox.io/p/sandbox/6ck4qz?file=%252Fsrc%252FShapeSection.tsx), useRouteState, url-shape, zod
 - [Type-safe nested routes](https://codesandbox.io/p/sandbox/pv9rgh?file=%252Fsrc%252FApp.tsx), useRoute, url-shape, zod
+- [Unknown routes](https://codesandbox.io/p/sandbox/jnngqt?file=%252Fsrc%252FApp.tsx), useRoute
 - [Lazy routes](https://codesandbox.io/p/sandbox/qw5r6g?file=%252Fsrc%252FApp.tsx), useRoute, React Suspense, React.lazy
 - [View transitions](https://codesandbox.io/p/sandbox/w4q95n?file=%252Fsrc%252FApp.tsx), useRoute, View Transition API
 - [Custom routing based on text input](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx), Route, RouteProvider, useRoute
