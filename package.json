@@ -1,6 +1,6 @@
 {
   "name": "react-sidestate",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Concise shared state management and routing in React apps",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
