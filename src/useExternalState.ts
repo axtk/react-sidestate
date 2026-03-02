@@ -43,8 +43,8 @@ export function useExternalState<
   let shouldUpdate = useRef(false);
 
   useEffect(() => {
-    // Allow state instances to hook into the effect
-    state.emit("effect");
+    // Start the state if it's not started yet
+    state.start();
 
     if (callback === false) return;
 

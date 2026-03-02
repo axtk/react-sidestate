@@ -1,4 +1,4 @@
 import { createContext } from "react";
 import { URLState } from "sidestate";
 
-export const URLContext = createContext(new URLState());
+export const URLContext = createContext(new URLState(null, { autoStart: false }));
