@@ -1,5 +1,5 @@
-import type { ContainerElement, Route } from "sidestate";
 import { type RefObject, useContext, useEffect } from "react";
+import type { ContainerElement, Route } from "sidestate";
 import { RouteContext } from "./RouteContext.ts";
 
 /**

@@ -4,7 +4,8 @@ import { A, useRoute, useRouteLinks } from "../../../index.ts";
 // Some safe HTML content that could have been fetched from the server.
 // It contains a baked-in HTML link that will be acting like a SPA link
 // after calling the `useRouteLinks` hook.
-const htmlContent = '<p>Lorem ipsum. See the <a href="/story">full story</a>.</p>';
+const htmlContent =
+  '<p>Lorem ipsum. See the <a href="/story">full story</a>.</p>';
 
 const Intro = () => {
   let containerRef = useRef<HTMLDivElement>(null);
@@ -40,8 +41,8 @@ export const App = () => {
           <A href="/">Intro</A>
         </nav>
       </header>
-      {at("/", <Intro/>)}
-      {at("/story", <Story/>)}
+      {at("/", <Intro />)}
+      {at("/story", <Story />)}
     </>
   );
 };
