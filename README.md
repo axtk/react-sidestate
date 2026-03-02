@@ -301,7 +301,7 @@ In the example below, storing and rendering the essential app data (`items`) and
 
 ### Shared and local async action state
 
-Use a string key with `useTransientState(key, action?)` to access the same action state from multiple components (as in `ItemList` and `Status` above). Pass `null` as a key to have the action state scoped locally to the component where the hook is used.
+Use a string key with `useTransientState(key, action?)` to access the same action state from multiple components (as in `ItemList` and `Status` above). Pass `null` as the key to have the action state scoped locally to the component where the hook is used.
 
 ### Silent tracking of background actions and optimistic updates
 
