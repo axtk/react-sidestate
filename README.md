@@ -261,7 +261,7 @@ Use this hook to manage URL parameters as state in a `useState`-like manner. Use
 
 Use this hook to track an async action's state, whether it's pending, successfully completed, or failed, without affecting the application's data management.
 
-In the example below, storing and rendering the essential app data (`items`) and the happy path scenario are unchanged. The loading and error state handling works like a decoupled scaffolding to the main scenario. (`items` are stored in local state here, but any other state used by the app can be there instead.)
+In the example below, storing and rendering the essential app data (`items`) and the happy path scenario remain unaffected. The loading and error state handling works like a decoupled scaffolding to the main scenario. (`items` are stored in local state here, but any other state used by the app can be there instead.)
 
 ```diff
 + import { useTransientState } from "react-sidestate";
@@ -303,7 +303,9 @@ In the example below, storing and rendering the essential app data (`items`) and
 
 Use a string key with `useTransientState(key, action?)` to access the same action state from multiple components (as in `ItemList` and `Status` above). Pass `null` as the key to have the action state scoped locally to the component where the hook is used.
 
-### Silent tracking of background actions and optimistic updates
+### Silent pending state
+
+Use case: background actions or optimistic updates.
 
 Set `{ silent: true }` as the last parameter of the trackable action returned from the `useTransientState` hook to prevent the `pending` property from switching to `true` in the pending state.
 
@@ -333,7 +335,7 @@ Allow the trackable action to reject explicitly with `{ throws: true }` as the l
 fetchItems({ throws: true }).catch(handleError)
 ```
 
-### Async action state provider
+### Action state provider
 
 `<TransientStateProvider>` creates an isolated instance of initial shared async action state. Its prime use cases are SSR and tests. It isn't required with client-side rendering, but it can be used to separate action states of larger self-contained portions of an app.
 
