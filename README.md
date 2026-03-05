@@ -2,7 +2,7 @@
 
 Shared state management and routing in React apps. Under the hood, routing is shared state management, too, with the shared data being the URL.
 
-Contents: [useExternalState](#useexternalstate) · [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [useTransientState](#usetransientstate) · [Annotated examples](#annotated-examples) · [Internals](#internals)
+Contents: [useExternalState](#useexternalstate) · [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [Type-safe routes](#type-safe-routes) · [useTransientState](#usetransientstate) · [Annotated examples](#annotated-examples) · [Internals](#internals)
 
 ## useExternalState
 
@@ -88,15 +88,13 @@ Immer can be used with state setters returned from `useExternalState()` just the
 
 ### Persistence across page reloads
 
-Replace `State` with `PersistentState` as shown below to get the state data synced to the specified `key` in `localStorage` and restored on page reload:
+Replace `State` with `PersistentState` as shown below to get the state data synced to the specified `key` in `localStorage` and restored on page reload. After a persistent state is created, use it with `useExternalState(state)` the same way as `State` instances.
 
 ```js
 import { PersistentState } from "react-sidestate";
 
 let counterState = new PersistentState(0, { key: "counter" });
 ```
-
-After a persistent state is created, use it with `useExternalState(state)` the same way as `State` instances.
 
 ⬥ Set `options.session` to `true` in `new PersistentState(value, options)` to use `sessionStorage`.
 
@@ -132,9 +130,9 @@ let App = () => {
 
 ⬥ `params` in dynamic values (as in `({ params }) => <Section id={params.id}/>` above) contains the URL pattern's capturing groups.
 
-⬥ By default, `params` extracted from a RegExp URL pattern has a shape of `Record<string, string | undefined>`. More specifically typed value parsing of `params` can be achieved in the same routing setup with URL patterns produced by a schema-based URL builder (like with `url-shape` + `zod` or another schema lib, [example](https://codesandbox.io/p/sandbox/tltq5r?file=%252Fsrc%252FApp.tsx)).
-
 ⬥ By default, `useRoute` and the other routing hooks described here make use of the browser's URL, if it's available. Otherwise, use `<RouteProvider href="/x">` to set a specific URL value. Common use cases: SSR and tests. A less common use case: custom routing behavior, including custom non-URL-based routing ([example](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)).
+
+⬥ See also the [Type-safe routes](#type-safe-routes) section.
 
 ### SPA navigation
 
@@ -256,6 +254,68 @@ Use this hook to manage URL parameters as state in a `useState`-like manner. Use
 ```
 
 ⬥ `useRouteState(url, options?)` has an optional second parameter in the shape of the `route.navigate()`'s options. Pass `{ scroll: "off" }` as `options` to opt out from the default scroll-to-the-top behavior when the URL changes.
+
+⬥ See also the [Type-safe routes](#type-safe-routes) section.
+
+## Type-safe routes
+
+When it comes to accessing parameters extracted from a URL pattern, the parameters are typed as `Record<string, string | undefined>` by default, which quite literally represents a map containing portions of a string URL.
+
+```ts
+let { at } = useRoute();
+
+at(/^\/sections\/(?<id>\d+)\/?$/, ({ params }) => <Section id={params.id}/>)
+                                  // ^ Record<string, string | undefined>
+
+let [state, setState] = useRouteState("/");
+  // ^ { query: Record<string, string | undefined> }
+```
+
+Optionally, more specific type-aware parsing of URL parameters can be achieved by replacing string and RegExp URL patterns with URL patterns produced by a schema-based URL builder, like with `url-shape` and `zod` or a [similar tool](https://standardschema.dev/schema#what-schema-libraries-implement-the-spec):
+
+```ts
+import { createURLSchema } from "url-shape";
+import { z } from "zod"; // Or another Standard Schema-compliant lib
+
+// Get a type-aware URL builder based on a URL schema
+const { url } = createURLSchema({
+  "/sections/:id": z.object({
+    // URL path placeholder parameters
+    params: z.object({ id: z.coerce.number() }),
+  }),
+  "/": z.object({
+    // URL query (or search) parameters
+    query: z.optional(z.object({ x: z.coerce.number(), y: z.coerce.number() })),
+  }),
+});
+```
+
+The type-aware URL builder will provide hints about the types of the parsed URL parameters and help avoid typos and type mismatches:
+
+```tsx
+let { at } = useRoute();
+
+at(url("/sections/:id"), ({ params }) => <Section id={params.id}/>)
+                         // ^ { id: number }
+
+let [state, setState] = useRouteState(url("/"));
+  // ^ { query: { x: number, y: number } | undefined }
+
+<A href={url("/sections/:id", { id: 1 })}>Section 1</A>
+                           // ^ { id: number }
+```
+
+The URL schema as shown above doesn't have to cover the entire app. This approach allows for incremental or partial adoption of type-safe routing, where needed.
+
+On the other hand, once the entire app is covered with type-safe routes, we might want to avoid future use of relaxed typing with string and RegExp URL patterns. This can be achieved by adding the following type declaration that effectively disallows string and RegExp URL patterns:
+
+```ts
+declare module "react-sidestate" {
+  interface Config {
+    strict: true;
+  }
+}
+```
 
 ## useTransientState
 
