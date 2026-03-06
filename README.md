@@ -261,7 +261,7 @@ Use this hook to manage URL parameters as state in a `useState`-like manner. Use
 
 When it comes to accessing parameters extracted from a URL pattern, the parameters are typed as `Record<string, string | undefined>` by default, which quite literally represents a map containing portions of a string URL.
 
-```ts
+```tsx
 let { at } = useRoute();
 
 at(/^\/sections\/(?<id>\d+)\/?$/, ({ params }) => <Section id={params.id}/>)
@@ -277,7 +277,7 @@ Optionally, more specific type-aware parsing of URL parameters can be achieved b
 import { createURLSchema } from "url-shape";
 import { z } from "zod"; // Or another Standard Schema-compliant lib
 
-// Get a type-aware URL builder based on a URL schema
+// Get a type-aware URL builder `url()` based on a URL schema
 const { url } = createURLSchema({
   "/sections/:id": z.object({
     // URL path placeholder parameters
@@ -290,7 +290,7 @@ const { url } = createURLSchema({
 });
 ```
 
-The type-aware URL builder will provide hints about the types of the parsed URL parameters and help avoid typos and type mismatches:
+The type-aware URL builder `url(pattern, options?)` provides hints about the types of the parsed URL parameters and help avoid typos and type mismatches:
 
 ```tsx
 let { at } = useRoute();
@@ -311,7 +311,7 @@ On the other hand, once the entire app is covered with type-safe routes, we migh
 
 ```ts
 declare module "react-sidestate" {
-  interface Config {
+  interface URLConfig {
     strict: true;
   }
 }
