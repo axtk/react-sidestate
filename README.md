@@ -278,7 +278,7 @@ import { createURLSchema } from "url-shape";
 import { z } from "zod"; // Or another Standard Schema-compliant lib
 
 // Get a type-aware URL builder `url()` based on a URL schema
-const { url } = createURLSchema({
+export const { url } = createURLSchema({
   "/sections/:id": z.object({
     // URL path placeholder parameters
     params: z.object({ id: z.coerce.number() }),
@@ -315,6 +315,28 @@ declare module "react-sidestate" {
     strict: true;
   }
 }
+```
+
+### Nested routes
+
+All routes are handled independently, so type-safe nested routes don't require special handling and don't maintain implicit relations with their parent routes. It also means that nested routes don't inherit their parent route parameters by default. Relations between routes (also beyond the direct inheritance of parameters) can be pretty straightforwardly defined on the URL schema level without imposing implicit constraints, which could be hard to work around.
+
+```ts
+const sectionParams = z.object({
+  sectionId: z.coerce.number(),
+});
+
+export const { url } = createURLSchema({
+  "/sections/:sectionId": z.object({
+    params: sectionParams,
+  }),
+  "/sections/:sectionId/stories/:storyId": z.object({
+    params: z.object({
+      ...sectionParams.shape, // Shared URL parameters
+      storyId: z.coerce.number(),
+    }),
+  }),
+});
 ```
 
 ## useTransientState
