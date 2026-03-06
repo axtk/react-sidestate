@@ -10,8 +10,8 @@
     "demo": "npx auxsrv tests/Shared_state_without_Context --spa -b index.tsx --watch",
     "preversion": "npx npm-run-all shape test",
     "shape": "npx codeshape",
-    "test": "npx playwright test --project=chromium",
     "t3": "npx auxsrv tests/Tic-tac-toe --spa -b src/index.tsx --watch",
+    "test": "npx playwright test --project=chromium",
     "typecheck": "npx codeshape --typecheck-only"
   },
   "repository": {
