@@ -259,7 +259,7 @@ Use this hook to manage URL parameters as state in a `useState`-like manner. Use
 
 ## Type-safe routes
 
-When it comes to accessing parameters extracted from a URL pattern, the parameters are typed as `Record<string, string | undefined>` by default, which quite literally represents a map containing portions of a string URL.
+When it comes to accessing parameters extracted from a URL pattern, by default the parameters are typed as `Record<string, string | undefined>`, which quite literally represents a map containing portions of a string URL.
 
 ```tsx
 let { at } = useRoute();
@@ -290,7 +290,7 @@ export const { url } = createURLSchema({
 });
 ```
 
-The type-aware URL builder `url(pattern, options?)` provides hints about the types of the parsed URL parameters and help avoid typos and type mismatches:
+The type-aware URL builder `url(pattern, options?)` provides hints about the types of the parsed URL parameters and helps avoid typos and type mismatches:
 
 ```tsx
 let { at } = useRoute();
