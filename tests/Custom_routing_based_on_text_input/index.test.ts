@@ -42,11 +42,7 @@ test.describe("custom routing", () => {
   let server: Server;
 
   test.beforeAll(async () => {
-    server = await serve({
-      path: import.meta.url,
-      bundle: "src/index.tsx",
-      spa: true,
-    });
+    server = await serve({ path: import.meta.url });
   });
 
   test.afterAll(() => {

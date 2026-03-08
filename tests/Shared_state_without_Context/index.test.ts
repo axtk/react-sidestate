@@ -24,11 +24,7 @@ class Playground {
 let server: Server;
 
 test.beforeAll(async () => {
-  server = await serve({
-    path: import.meta.url,
-    bundle: "index.tsx",
-    spa: true,
-  });
+  server = await serve({ path: import.meta.url });
 });
 
 test.afterAll(() => {
