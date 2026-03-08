@@ -1,4 +1,5 @@
 import { A, useRoute } from "../../../index.ts";
+
 // `<A>` is a link component which is like a plain HTML link
 // for SPA navigation
 

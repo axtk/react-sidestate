@@ -1,5 +1,5 @@
-import { createContext, useContext } from "react";
 import { produce } from "immer";
+import { createContext, useContext } from "react";
 import { State, useExternalState } from "../../../index.ts";
 
 let AppContext = createContext(new State({ counter: 0 }));
@@ -22,7 +22,7 @@ let PlusButton = () => {
         // Immer makes the code of immutable state updates look like
         // direct mutations, which can facilitate manipulation of nested data.
         draft.counter++;
-      })
+      }),
     );
   };
 

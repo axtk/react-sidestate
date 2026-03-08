@@ -18,7 +18,7 @@ const { url } = createURLSchema({
         x: z.coerce.number(),
         y: z.coerce.number(),
         r: z.coerce.number(),
-      })
+      }),
     ),
   }),
 });

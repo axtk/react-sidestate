@@ -24,7 +24,7 @@ export const App = () => {
         "/items",
         <Suspense fallback={<p>⌛ Loading...</p>}>
           <ItemList />
-        </Suspense>
+        </Suspense>,
       )}
     </>
   );

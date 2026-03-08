@@ -88,7 +88,7 @@ export let App = () => {
         url("/"),
         <main>
           <h1>Intro</h1>
-        </main>
+        </main>,
       )}
     </>
   );
