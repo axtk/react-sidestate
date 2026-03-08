@@ -1,8 +1,36 @@
-import { Display } from "./Display.tsx";
-import { PlusButton } from "./PlusButton.tsx";
+import { createContext, useContext } from "react";
+import { produce } from "immer";
+import { State, useExternalState } from "../../../index.ts";
 
-export const App = () => (
-  <>
+let AppContext = createContext(new State({ counter: 0 }));
+
+let Display = () => {
+  let [state] = useExternalState(useContext(AppContext));
+
+  return <span>{state.counter}</span>;
+};
+
+let PlusButton = () => {
+  // This component doesn't make use of the state value, so we are
+  // opting out from subscription to its updates by adding `false`
+  let [, setCounter] = useExternalState(useContext(AppContext), false);
+
+  let handleClick = () => {
+    // Same as with setters from `useState()`
+    setCounter(
+      produce((draft) => {
+        // Immer makes the code of immutable state updates look like
+        // direct mutations, which can facilitate manipulation of nested data.
+        draft.counter++;
+      })
+    );
+  };
+
+  return <button onClick={handleClick}>+</button>;
+};
+
+export let App = () => (
+  <AppContext.Provider value={new State({ counter: 42 })}>
     <PlusButton /> <Display />
-  </>
+  </AppContext.Provider>
 );

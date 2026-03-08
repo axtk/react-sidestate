@@ -1,16 +1,23 @@
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { type Server, serve } from "auxsrv";
 
 class Playground {
   readonly page: Page;
+  readonly counterButton: Locator;
+  readonly resetButton: Locator;
   constructor(page: Page) {
     this.page = page;
+    this.counterButton = page.locator("button:first-of-type");
+    this.resetButton = page.locator("button:last-of-type");
   }
-  async clickPlusButton() {
-    await this.page.getByRole("button", { name: "+" }).click();
+  async clickCounter() {
+    await this.counterButton.click();
+  }
+  async reset() {
+    await this.resetButton.click();
   }
   async hasCounterValue(value: number) {
-    await expect(this.page.locator("#app > span")).toHaveText(String(value));
+    await expect(this.counterButton).toHaveText(`+ ${value}`);
   }
 }
 
@@ -24,14 +31,19 @@ test.afterAll(() => {
   server.close();
 });
 
-test("counter", async ({ page }) => {
+test("counter with context", async ({ page }) => {
   let p = new Playground(page);
 
   await page.goto("/");
   await p.hasCounterValue(42);
-  await p.clickPlusButton();
+  await p.clickCounter();
   await p.hasCounterValue(43);
-  await p.clickPlusButton();
-  await p.clickPlusButton();
+  await p.clickCounter();
+  await p.clickCounter();
   await p.hasCounterValue(45);
+  await p.reset();
+  await p.hasCounterValue(0);
+  await p.clickCounter();
+  await p.clickCounter();
+  await p.hasCounterValue(2);
 });

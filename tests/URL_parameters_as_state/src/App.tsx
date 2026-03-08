@@ -2,6 +2,8 @@ import { useRouteState } from "../../../index.ts";
 import { Shape } from "./Shape.tsx";
 
 export const App = () => {
+  // Use `useRouteState()` to manipulate the URL in a
+  // `useState()`-like manner.
   let [{ query }, setState] = useRouteState("/");
 
   let setPosition = () => {

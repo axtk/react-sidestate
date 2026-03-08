@@ -1,4 +1,6 @@
 import { A, useRoute } from "../../../index.ts";
+// `<A>` is a link component which is like a plain HTML link
+// for SPA navigation
 
 const Intro = () => (
   <main>
@@ -30,6 +32,8 @@ export const App = () => {
 
   return (
     <>
+      {/* at(url, x, y) acts similarly to `atURL ? x : y`.
+        It works equally with components and props. */}
       <header className={at(routes.intro, "full", "compact")}>
         <h1>App</h1>
         <nav>
@@ -44,9 +48,15 @@ export const App = () => {
       </header>
       {at(routes.intro, <Intro />)}
       {at(routes.sections, ({ params }) => (
+        // `params` contains the capturing group values of the URL pattern
         <Section id={params.id} />
       ))}
+      {/* Rendering `null`, that is no content, for all known routes
+        and the `ErrorSection` component for the rest unknown ones. */}
       {at(knownRoutes, null, <ErrorSection />)}
+      {/* All `at()` calls are independent from each other, so they
+        don't maintain any specific order, and an error handling one
+        doesn't have to be the last one. */}
     </>
   );
 };

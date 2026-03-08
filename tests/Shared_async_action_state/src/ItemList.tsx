@@ -4,12 +4,20 @@ import { fetchItems as fetchItemsOriginal, type Item } from "./fetchItems.ts";
 
 export let ItemList = () => {
   let [items, setItems] = useState<Item[]>([]);
+
+  // This hook returns the async action's state and a trackable
+  // version of the async action
   let [{ initial, pending, error }, fetchItems] = useTransientState(
-    "fetch-items",
+    "items",
     fetchItemsOriginal,
   );
+  // By using a string key as a parameter, this hook makes the
+  // action's state accessible to other components in the app
+  // (see `Status.tsx` that accesses this state)
 
   let loadItems = useCallback(() => {
+    // The fetched items can be stored in any app state without
+    // affecting the async action state handling
     fetchItems().then(setItems);
   }, [fetchItems]);
 

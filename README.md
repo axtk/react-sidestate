@@ -468,6 +468,8 @@ Async action state
 
 - [Shared async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx), useTransientState
 
+Find also the code of these examples in the repo's [`tests`](https://github.com/axtk/react-sidestate/tree/main/tests) directory.
+
 ## Internals
 
 [`sidestate`](https://www.npmjs.com/package/sidestate)

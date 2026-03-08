@@ -3,22 +3,32 @@ import { z } from "zod";
 import { A, useRouteState } from "../../../index.ts";
 import { Shape } from "./Shape.tsx";
 
+// Get a type-aware URL builder `url()` based on a URL schema.
+// A schema can cover the entire app or its portion, allowing for
+// incremental or partial adoption of type-safe routing.
 const { url } = createURLSchema({
   "/shapes/:id": z.object({
+    // URL path placeholder parameters
     params: z.object({
       id: z.coerce.number(),
     }),
+    // URL query (or search) parameters
     query: z.optional(
       z.object({
         x: z.coerce.number(),
         y: z.coerce.number(),
         r: z.coerce.number(),
-      }),
+      })
     ),
   }),
 });
 
 export const ShapeSection = () => {
+  // Use `useRouteState()` to manipulate the URL in a
+  // `useState()`-like manner.
+  // The typed URL builder like `url()` allows to manipulate it with more
+  // type safety, so that the `params` and `query` properties are in line
+  // with the URL schema defined above.
   let [{ params, query }, setState] = useRouteState(url("/shapes/:id"));
 
   let setPosition = () => {

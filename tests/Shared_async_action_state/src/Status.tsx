@@ -1,7 +1,9 @@
 import { useTransientState } from "../../../index.ts";
 
 export let Status = () => {
-  let [{ initial, pending, error }] = useTransientState("fetch-items");
+  // The hook accesses the async action state updated in the `ItemList`
+  // component by using the same string key
+  let [{ initial, pending, error }] = useTransientState("items");
 
   // if (initial) return <>⚪ Initial</>;
 

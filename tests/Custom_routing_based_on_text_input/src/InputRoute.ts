@@ -4,6 +4,8 @@ import {
   Route,
 } from "../../../index.ts";
 
+// Defining a variety of `Route` that interacts with a text input
+// rather than the browser's URL
 export class InputRoute extends Route {
   inputId: string;
   constructor(inputId: string, url?: LocationValue) {

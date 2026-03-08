@@ -2,18 +2,26 @@ import { createURLSchema } from "url-shape";
 import { z } from "zod";
 import { A, useRoute } from "../../../index.ts";
 
-let sectionParams = z.object({
+const sectionParams = z.object({
   sectionId: z.coerce.number(),
 });
 
+// Get a type-aware URL builder `url()` based on a URL schema.
+// A schema can cover the entire app or its portion, allowing for
+// incremental or partial adoption of type-safe routing.
 const { url } = createURLSchema({
   "/": z.object({}),
   "/sections/:sectionId": z.object({
     params: sectionParams,
   }),
+  // All routes are handled equally, nested routes don't inherit their parent
+  // route parameters by default, since these relations can be pretty
+  // straightforwardly defined on the URL schema level without imposing
+  // implicit constraints, which could be hard to work around.
   "/sections/:sectionId/stories/:storyId": z.object({
     params: z.object({
-      ...sectionParams.shape, // Shared params
+      // Shared URL parameters
+      ...sectionParams.shape,
       storyId: z.coerce.number(),
     }),
   }),
@@ -30,6 +38,8 @@ let Nav = () => (
       </li>
       {Array.from({ length: sectionCount }).map((_, i) => (
         <li key={i}>
+          {/* With the type-aware URL builder `url()`, `params` are
+            typed according to the URL schema above. */}
           <A
             href={url("/sections/:sectionId", { params: { sectionId: i + 1 } })}
           >
@@ -60,6 +70,8 @@ export let App = () => {
   return (
     <>
       <Nav />
+      {/* at(url, x, y) acts similarly to `atURL ? x : y`.
+        It works equally with components and props. */}
       {at(url("/sections/:sectionId"), ({ params }) => (
         <main>
           <h1>Section {params.sectionId}</h1>
@@ -76,7 +88,7 @@ export let App = () => {
         url("/"),
         <main>
           <h1>Intro</h1>
-        </main>,
+        </main>
       )}
     </>
   );
