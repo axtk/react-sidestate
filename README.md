@@ -1,4 +1,4 @@
-# react-sidestate
+# react-stateshape
 
 Shared state management and routing in React apps. Under the hood, routing is shared state management, too, with the shared data being the URL.
 
@@ -13,7 +13,7 @@ This hook is focused on simplicity of both setting up shared state from scratch 
 Move local state to the full-fledged shared state with minimal paradigm shift and minimal code changes:
 
 ```diff
-+ import { State, useExternalState } from "react-sidestate";
++ import { State, useExternalState } from "react-stateshape";
 +
 + let counterState = new State(0);
 
@@ -91,7 +91,7 @@ Immer can be used with state setters returned from `useExternalState()` just the
 Replace `State` with `PersistentState` as shown below to get the state data synced to the specified `key` in `localStorage` and restored on page reload. After a persistent state is created, use it with `useExternalState(state)` the same way as `State` instances.
 
 ```js
-import { PersistentState } from "react-sidestate";
+import { PersistentState } from "react-stateshape";
 
 let counterState = new PersistentState(0, { key: "counter" });
 ```
@@ -113,7 +113,7 @@ Use this hook for URL-based rendering and SPA navigation, which boil down to acc
 URL-based rendering with `at(url, x, y)` shown below works similarly to conditional rendering with the ternary operator `atURL ? x : y`. It's equally applicable to props and components:
 
 ```jsx
-import { useRoute } from "react-sidestate";
+import { useRoute } from "react-stateshape";
 
 let App = () => {
   let { at } = useRoute();
@@ -139,7 +139,7 @@ let App = () => {
 The SPA navigation API is largely aligned with the similar built-in APIs:
 
 ```diff
-+ import { A, useRoute } from "react-sidestate";
++ import { A, useRoute } from "react-stateshape";
 
   let UserNav = ({ signedIn }) => {
 +   let { route } = useRoute();
@@ -189,7 +189,7 @@ These hooks set up optional actions to be done before and after a SPA navigation
 Some common examples of what can be handled with middleware include redirecting to another URL, preventing navigation with unsaved user input, setting the page title based on the current URL:
 
 ```jsx
-import { useNavigationComplete, useNavigationStart } from "react-sidestate";
+import { useNavigationComplete, useNavigationStart } from "react-stateshape";
 
 function setTitle({ href }) {
   document.title = href === "/intro" ? "Intro" : "App";
@@ -225,7 +225,7 @@ let App = () => {
 Use this hook to manage URL parameters as state in a `useState`-like manner. Use the React's state mental model and migrate from local state without major code rewrites:
 
 ```diff
-+ import { useRouteState } from "react-sidestate";
++ import { useRouteState } from "react-stateshape";
 
   let App = () => {
 -   let [{ coords }, setState] = useState({ coords: { x: 0, y: 0 } });
@@ -310,7 +310,7 @@ The URL schema as shown above doesn't have to cover the entire app. This approac
 On the other hand, once the entire app is covered with type-safe routes, we might want to avoid future use of relaxed typing with string and RegExp URL patterns. This can be achieved by adding the following type declaration that effectively disallows string and RegExp URL patterns:
 
 ```ts
-declare module "react-sidestate" {
+declare module "react-stateshape" {
   interface URLConfig {
     strict: true;
   }
@@ -346,7 +346,7 @@ Use this hook to track an async action's state, whether it's pending, successful
 In the example below, storing and rendering the essential app data (`items`) and the happy path scenario remain unaffected. The loading and error state handling works like a decoupled scaffolding to the main scenario. (`items` are stored in local state here, but any other state used by the app can be there instead.)
 
 ```diff
-+ import { useTransientState } from "react-sidestate";
++ import { useTransientState } from "react-stateshape";
 - import { fetchItems } from "./fetchItems.js";
 + import { fetchItems as fetchItemsOriginal } from "./fetchItems.js";
 
@@ -367,7 +367,7 @@ In the example below, storing and rendering the essential app data (`items`) and
 ```
 
 ```diff
-+ import { useTransientState } from "react-sidestate";
++ import { useTransientState } from "react-stateshape";
 
 - export let Status = ({ state }) => {
 + export let Status = () => {
@@ -422,7 +422,7 @@ fetchItems({ throws: true }).catch(handleError)
 `<TransientStateProvider>` creates an isolated instance of initial shared async action state. Its prime use cases are SSR and tests. It isn't required with client-side rendering, but it can be used to separate action states of larger self-contained portions of an app.
 
 ```jsx
-import { TransientStateProvider } from "react-sidestate";
+import { TransientStateProvider } from "react-stateshape";
 
 <TransientStateProvider>
   <App/>
@@ -468,8 +468,8 @@ Async action state
 
 - [Shared async action state](https://codesandbox.io/p/sandbox/x9d2c9?file=%252Fsrc%252FItemList.tsx), useTransientState
 
-Find also the code of these examples in the repo's [`tests`](https://github.com/axtk/react-sidestate/tree/main/tests) directory.
+Find also the code of these examples in the repo's [`tests`](https://github.com/axtk/react-stateshape/tree/main/tests) directory.
 
 ## Internals
 
-[`sidestate`](https://www.npmjs.com/package/sidestate)
+[`stateshape`](https://www.npmjs.com/package/stateshape)

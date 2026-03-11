@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useMemo } from "react";
-import { URLState } from "sidestate";
+import { URLState } from "stateshape";
 import { URLContext } from "./URLContext.ts";
 
 export type URLProviderProps = {

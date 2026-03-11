@@ -3,7 +3,7 @@ import {
   useCallback,
   useContext,
 } from "react";
-import { getNavigationOptions, isRouteEvent } from "sidestate";
+import { getNavigationOptions, isRouteEvent } from "stateshape";
 import { RouteContext } from "./RouteContext.ts";
 import type { AProps } from "./types/AProps.ts";
 import type { AreaProps } from "./types/AreaProps.ts";

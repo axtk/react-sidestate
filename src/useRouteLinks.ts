@@ -1,5 +1,5 @@
 import { type RefObject, useContext, useEffect } from "react";
-import type { ContainerElement, Route } from "sidestate";
+import type { ContainerElement, Route } from "stateshape";
 import { RouteContext } from "./RouteContext.ts";
 
 /**

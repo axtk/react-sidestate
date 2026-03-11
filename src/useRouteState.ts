@@ -6,7 +6,7 @@ import {
   matchURL,
   type NavigationOptions,
   type URLData,
-} from "sidestate";
+} from "stateshape";
 import { useRoute } from "./useRoute.ts";
 
 export type SetRouteState<T extends LocationValue> = (

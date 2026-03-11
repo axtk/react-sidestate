@@ -1,5 +1,5 @@
 {
-  "name": "react-sidestate",
+  "name": "react-stateshape",
   "version": "0.1.12",
   "description": "Concise shared state management and routing in React apps",
   "main": "./dist/index.cjs",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/axtk/react-sidestate.git"
+    "url": "git+https://github.com/axtk/react-stateshape.git"
   },
   "keywords": [
     "state",
@@ -44,6 +44,6 @@
     "zod": "^4.3.6"
   },
   "dependencies": {
-    "sidestate": "^0.1.16"
+    "stateshape": "^0.2.0"
   }
 }
