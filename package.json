@@ -12,7 +12,7 @@
     "shape": "npx codeshape",
     "t3": "npx auxsrv tests/Tic-tac-toe",
     "test": "npx playwright test --project=chromium",
-    "typecheck": "npx codeshape --typecheck-only"
+    "typecheck": "npx codeshape typecheck"
   },
   "repository": {
     "type": "git",
