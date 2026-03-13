@@ -66,16 +66,19 @@ let App = () => (
 
 ### Filtering state updates
 
-⬥ Use the optional `false` parameter in `useExternalState(state, false)`, as in `<ResetButton>` above, to tell the hook not to subscribe the component to tracking the external state updates. The common use case for it is when a component makes use of the external state value setter without using the state value itself.
+⬥ Use the optional `false` parameter in `useExternalState(state, false)`, as in `ResetButton` above, to tell the hook not to subscribe the component to tracking the external state updates. The common use case for it is when a component makes use of the external state value setter without using the state value itself.
 
 ⬥ Apart from setting the optional second parameter of `useExternalState(state, callback)` to a boolean value, use it as a render callback for more fine-grained control over component's re-renders in response to state changes:
 
 ```js
+let itemState = new State({/* A map of `<id>: <item>` */});
+
+// Renders a specific item from `itemState`
 let ItemCard = ({ id }) => {
   let [items, setItems] = useExternalState(itemState, (render, { current, previous }) => {
-    // Assuming that the items have a `revision` property, re-render
-    // `ItemCard` only if the relevant item's `revision` has changed.
-    if (current[id].revision !== previous[id].revision) render();
+    // Assuming that the items have a `timestamp` property, re-render
+    // `ItemCard` only if the relevant item's `timestamp` has increased
+    if (current[id].timestamp > previous[id].timestamp) render();
   });
 
   // ...
@@ -130,7 +133,7 @@ let App = () => {
 
 ⬥ `params` in dynamic values (as in `({ params }) => <Section id={params.id}/>` above) contains the URL pattern's capturing groups.
 
-⬥ By default, `useRoute` and the other routing hooks described here make use of the browser's URL, if it's available. Otherwise, use `<RouteProvider href="/x">` to set a specific URL value. Common use cases: SSR and tests. A less common use case: custom routing behavior, including custom non-URL-based routing ([example](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)).
+⬥ By default, `useRoute` and the other routing hooks described here make use of the browser's URL, if it's available. Otherwise, use `<RouteProvider href={url}>` to set a specific URL value. Common use cases: SSR and tests. A less common use case: custom routing behavior, including custom non-URL-based routing ([example](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)).
 
 ⬥ See also the [Type-safe routes](#type-safe-routes) section.
 
