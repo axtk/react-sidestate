@@ -1,6 +1,6 @@
 # react-stateshape
 
-Shared state management and routing in React apps. Under the hood, routing is shared state management, too, with the shared data being the URL.
+A shared state management and routing lib for React apps. Under the hood, routing is shared state management, too, with the shared data being the URL.
 
 Contents: [useExternalState](#useexternalstate) · [useRoute](#useroute) · [useNavigationStart / useNavigationComplete](#usenavigationstart--usenavigationcomplete) · [useRouteState](#useroutestate) · [Type-safe routes](#type-safe-routes) · [useTransientState](#usetransientstate) · [Annotated examples](#annotated-examples) · [Internals](#internals)
 
