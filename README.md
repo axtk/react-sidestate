@@ -105,7 +105,7 @@ let counterState = new PersistentState(0, { key: "counter" });
 
 ⬥ Set up interaction with a custom storage by setting `{ read(), write(value)? }` as `options` in `new PersistentState(value, options)`.
 
-⬥ `PersistentState` skips interaction with the browser storage in non-browser environments, which makes it usable with SSR. One way to avoid mismatch errors while hydrating SSR content based on values from a persisent state is using client-side rendering detection utilities such as [`react-clientside`](https://www.npmjs.com/package/react-clientside).
+⬥ `PersistentState` skips interaction with the browser storage in non-browser environments, which makes it usable with SSR. One way to avoid mismatch errors while hydrating SSR content based on a persisent state restored in the browser is using client-side rendering detection utilities such as [`react-clientside`](https://www.npmjs.com/package/react-clientside).
 
 ## useRoute
 
@@ -133,7 +133,7 @@ let App = () => {
 
 ⬥ `params` in dynamic values (as in `({ params }) => <Section id={params.id}/>` above) contains the URL pattern's capturing groups.
 
-⬥ By default, `useRoute` and the other routing hooks described here make use of the browser's URL, if it's available. Otherwise, use `<RouteProvider href={url}>` to set a specific URL value. Common use cases: SSR and tests. A less common use case: custom routing behavior, including custom non-URL-based routing ([example](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)).
+⬥ By default, `useRoute` makes use of the browser's URL, if it's available. Otherwise, use `<RouteProvider href={url}>` to set a specific URL value. Common use cases: SSR and tests. A less common use case: custom routing behavior, including custom non-URL-based routing ([example](https://codesandbox.io/p/sandbox/tykt44?file=%252Fsrc%252FApp.tsx)).
 
 ⬥ See also the [Type-safe routes](#type-safe-routes) section.
 
